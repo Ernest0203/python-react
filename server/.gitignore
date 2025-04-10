@@ -1,0 +1,37 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtualenv
+venv/
+.env
+.env.*
+.venv/
+
+# VSCode / JetBrains IDEs
+.vscode/
+.idea/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test coverage / reports
+htmlcov/
+.coverage
+coverage.xml
+.pytest_cache/
+
+# mypy / pyright / pylint / etc
+.mypy_cache/
+.pyright/
+
+# FastAPI OpenAPI docs cache (если генеришь)
+openapi.json
+
+# Pydantic / Poetry / pip-tools artifacts
+*.lock
