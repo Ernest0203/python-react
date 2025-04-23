@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import axios from "axios"
 
 const Signin = () => {
@@ -17,10 +17,29 @@ const Signin = () => {
         withCredentials: true,
       }  
     )
-    console.log(res.data)
     if (res.data.access_token) {
       localStorage.setItem("token", res.data.access_token)
       window.open("/account", "_self")
+    } else {
+      alert("Invalid credentials")
+    }
+  }
+
+  const register = async () => {
+    const res = await axios.post("http://127.0.0.1:8000/auth/register", {
+        email: username,
+        password: password,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        withCredentials: true,
+      }  
+    )
+    if (res.data) {
+      await login()
     } else {
       alert("Invalid credentials")
     }
@@ -55,7 +74,7 @@ const Signin = () => {
         <input type="password" className="input" placeholder="Password" />
         <br />
         <br />
-        <button className="btn">Signup</button>
+        <button className="btn" onClick={register}>Signup</button>
       </fieldset>
     </div>
   )
