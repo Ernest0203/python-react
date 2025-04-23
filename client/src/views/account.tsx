@@ -1,6 +1,10 @@
+import { useState } from 'react'
 import axios from "axios"
+import AnalyzeResult from "./analyzeResult"
 
 const Account = () => {
+  const [result, setResult] = useState<any>(null)
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
 
@@ -18,7 +22,9 @@ const Account = () => {
       },
     })
 
-    console.log(res)
+    if (res.data) {
+      setResult(res.data)
+    }
   }
 
   return (
@@ -29,6 +35,9 @@ const Account = () => {
           onChange={handleFileUpload}
         />
       </fieldset>
+      {result && 
+        <AnalyzeResult result={result} />
+      }
     </div>
   )
 }
