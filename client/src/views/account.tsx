@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import axios from "axios"
 import AnalyzeResult from "./analyzeResult"
+import AnalyzeScatter from './analyzeScatter'
 
 const Account = () => {
   const [result, setResult] = useState<any>(null)
@@ -36,7 +37,10 @@ const Account = () => {
         />
       </fieldset>
       {result && 
-        <AnalyzeResult result={result} />
+        <div>
+          {/* <AnalyzeResult result={result} /> */}
+          <AnalyzeScatter result={result} />
+        </div>
       }
     </div>
   )

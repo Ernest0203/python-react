@@ -10,6 +10,7 @@ type Stats = {
 type AnalyzeResultProps = {
   result: {
     summary: Record<string, Stats>;
+    salaryByDepartment?: Record<string, number>;
   };
 };
 
@@ -17,6 +18,13 @@ const AnalyzeResult = ({ result }: AnalyzeResultProps) => {
   const numericColumns = Object.entries(result.summary).filter(
     ([_, stats]) => typeof stats.mean === "number"
   )
+
+  const salaryByDepartmentData = result.salaryByDepartment
+    ? Object.entries(result.salaryByDepartment).map(([department, value]) => ({
+        name: department,
+        value,
+      }))
+    : []
 
   return (
     <div>
@@ -32,6 +40,17 @@ const AnalyzeResult = ({ result }: AnalyzeResultProps) => {
           />
         </div>
       ))}
+      {salaryByDepartmentData.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-lg mb-2">Средняя зарплата по отделам</h3>
+          <ChartPanel
+            label="Зарплата по отделам"
+            data={salaryByDepartmentData}
+            dataKey="value"
+            nameKey="name"
+          />
+        </div>
+      )}
     </div>
   )
 }
