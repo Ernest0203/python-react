@@ -3,7 +3,7 @@ import axios from "axios"
 import AnalyzeResult from "./analyzeResult"
 import AnalyzeScatter from './analyzeScatter'
 
-const Account = () => {
+const Analyze = () => {
   const [result, setResult] = useState<any>(null)
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,14 +31,14 @@ const Account = () => {
   return (
     <div className="account-container">
       <fieldset className="fieldset" style={{ marginTop: 50 }}>
-        <legend className="fieldset-legend">Pick a csv file</legend>
+        <legend className="fieldset-legend">Analyze</legend>
         <input type="file" accept=".csv" className="file-input" 
           onChange={handleFileUpload}
         />
       </fieldset>
       {result && 
         <div>
-          {/* <AnalyzeResult result={result} /> */}
+          <AnalyzeResult result={result} />
           <AnalyzeScatter result={result} />
         </div>
       }
@@ -46,4 +46,4 @@ const Account = () => {
   )
 }
 
-export default Account
+export default Analyze
