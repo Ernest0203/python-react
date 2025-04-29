@@ -8,6 +8,7 @@ venv/
 .env
 .env.*
 .venv/
+.venv-linux/
 
 # VSCode / JetBrains IDEs
 .vscode/

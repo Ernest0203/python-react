@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import axios from "axios"
-import AnalyzeResult from "../analyze/analyzeResult"
-import AnalyzeScatter from '../analyze/analyzeScatter'
+import PredictionChart from './predictionChart'
 
 const Predict = () => {
   const [result, setResult] = useState<any>(null)
@@ -24,8 +23,7 @@ const Predict = () => {
     })
 
     if (res.data) {
-      console.log(res.data)
-      //setResult(res.data)
+      setResult(res.data)
     }
   }
 
@@ -39,8 +37,7 @@ const Predict = () => {
       </fieldset>
       {result && 
         <div>
-          <AnalyzeResult result={result} />
-          <AnalyzeScatter result={result} />
+          <PredictionChart actual={result.actual} predicted={result.predicted} />
         </div>
       }
     </div>
