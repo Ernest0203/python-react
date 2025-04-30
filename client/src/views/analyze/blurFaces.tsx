@@ -1,16 +1,12 @@
 import { useState } from 'react'
 import axios from "axios"
 
-const AnalyzeImg = () => {
+const BlurFaces = () => {
   const [result, setResult] = useState<any>(null)
   const [imgUrl, setImgUrl] = useState<any>(null)
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-
-    if(file) {
-      setImgUrl(URL.createObjectURL(file))
-    }
 
     if (!file) {
       alert('Choose file')
@@ -20,22 +16,23 @@ const AnalyzeImg = () => {
     const formData = new FormData()
     formData.append('file', file)
 
-    const res = await axios.post("http://127.0.0.1:8000/analyze_img", formData, {
+    const res = await axios.post("http://127.0.0.1:8000/blur_faces", formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+       responseType: "blob"
     })
 
     if (res.data) {
-      setResult(res.data)
-      console.log(res.data)
+      const imageUrl = URL.createObjectURL(res.data)
+      setImgUrl(imageUrl)
     }
   }
 
   return (
     <div className="account-container">
       <fieldset className="fieldset" style={{ margin: '50px 0' }}>
-        <legend className="fieldset-legend">Analyze Image</legend>
+        <legend className="fieldset-legend">Blur Faces</legend>
         <input type="file" accept="" className="file-input" 
           onChange={handleFileUpload}
         />
@@ -61,4 +58,4 @@ const AnalyzeImg = () => {
   )
 }
 
-export default AnalyzeImg
+export default BlurFaces

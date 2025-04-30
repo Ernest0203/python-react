@@ -4,17 +4,22 @@ bcrypt==4.3.0
 click==8.1.8
 cmake==4.0.0
 colorama==0.4.6
+dlib==19.24.8
 dnspython==2.7.0
 ecdsa==0.19.1
 email_validator==2.2.0
+face-recognition==1.3.0
+face_recognition_models @ file:///mnt/c/Users/ernes/OneDrive/%D0%A0%D0%B0%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D0%BE%D0%BB/python/server/face_recognition_models
 fastapi==0.115.12
 h11==0.14.0
 idna==3.10
 joblib==1.4.2
 motor==3.7.0
 numpy==2.2.5
+opencv-python-headless==4.11.0.86
 pandas==2.2.3
 passlib==1.7.4
+pillow==11.2.1
 pyasn1==0.4.8
 pydantic==2.11.3
 pydantic_core==2.33.1
@@ -27,6 +32,7 @@ pytz==2025.2
 rsa==4.9.1
 scikit-learn==1.6.1
 scipy==1.15.2
+setuptools==80.0.0
 six==1.17.0
 sniffio==1.3.1
 starlette==0.46.1
