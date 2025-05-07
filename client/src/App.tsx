@@ -7,6 +7,7 @@ import Predict from './views/predict/predict'
 import Signin from './views/signin'
 import BlurFaces from './views/analyze/blurFaces'
 import AnalyzeTextImg from './views/analyze/ocr'
+import CryptoChart from './views/analyze/crypto'
 import { Link } from 'react-router-dom'
 
 import './App.css'
@@ -36,6 +37,7 @@ function App() {
         <Link to="/analyze_img">Analyze image</Link>
         <Link to="/blur_faces">Blur faces</Link>
         <Link to="/analyze_text">Analyze text</Link>
+        <Link to="/crypto">Crypto</Link>
       </div>
 
       <Routes>
@@ -46,6 +48,7 @@ function App() {
         <Route path="/analyze_img" element={<AnalyzeImg />} />
         <Route path="/blur_faces" element={<BlurFaces />} />
         <Route path="/analyze_text" element={<AnalyzeTextImg />} />
+        <Route path="/crypto" element={<CryptoChart />} />
       </Routes>
     </>
   )
