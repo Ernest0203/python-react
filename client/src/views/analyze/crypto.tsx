@@ -85,7 +85,7 @@ const CryptoChart = () => {
 
       {loading && <p>Загрузка данных...</p>}
 
-      {!loading && data && 
+      {!loading && data.lstm_prediction && 
         <div style={{ textAlign: "left" }}>
           <br />
           <div>Last close: {data.last_close}</div>
