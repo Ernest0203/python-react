@@ -37,7 +37,7 @@ function App() {
         <Link to="/analyze_img">Analyze image</Link>
         <Link to="/blur_faces">Blur faces</Link>
         <Link to="/analyze_text">Analyze text</Link>
-        <Link to="/crypto">Crypto</Link>
+        <Link to="/crypto">Crypto predict</Link>
       </div>
 
       <Routes>

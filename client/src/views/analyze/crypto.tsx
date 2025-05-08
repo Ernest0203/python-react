@@ -5,35 +5,41 @@ import {
   CartesianGrid, ResponsiveContainer
 } from "recharts"
 
-const intervals = ["5", "30", "60", "240", "360", "720", "D", "W", "M"]
+const intervals = ["5", "30", "60", "120", "240", "360", "720", "D", "W", "M"]
+
+function normalizeTicker(ticker: string) {
+  const upper = ticker.trim().toUpperCase();
+  const base = upper.endsWith("USDT") ? upper.slice(0, -4) : upper;
+  return base + "USDT";
+}
 
 const CryptoChart = () => {
   const [symbol, setSymbol] = useState("BTCUSDT");
   const [interval, setInterval] = useState("60");
-  const [days, setDays] = useState(7);
-  const [data, setData] = useState<any[]>([]);
+  const [days, setDays] = useState(100);
+  const [data, setData] = useState<any>({});
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://127.0.0.1:8000/crypto/history", {
+      const res = await axios.get("http://127.0.0.1:8000/crypto/lstm", {
         params: {
-          symbol,
+          symbol: normalizeTicker(symbol),
           interval,
           days,
         },
       })
 
-      console.log(res.data)
+      setData(res.data)
 
       // Преобразуем timestamp в читаемую дату
-      const chartData = res.data.map((item: any) => ({
-        ...item,
-        time: new Date(item.timestamp).toLocaleString(),
-      }));
+      // const chartData = res.data.map((item: any) => ({
+      //   ...item,
+      //   time: new Date(item.timestamp).toLocaleString(),
+      // }));
 
-      setData(chartData);
+      // setData(chartData);
     } catch (error) {
       console.error("Failed to fetch data:", error);
     } finally {
@@ -79,7 +85,23 @@ const CryptoChart = () => {
 
       {loading && <p>Загрузка данных...</p>}
 
-      {!loading && data.length > 0 && (
+      {!loading && data && 
+        <div style={{ textAlign: "left" }}>
+          <br />
+          <div>Last close: {data.last_close}</div>
+          <br />
+          <div>Next predict: </div>
+          <ul>
+            {data.lstm_prediction.map((item: any, index: number) => (
+              <li key={index}>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      }
+
+      {/* {!loading && data.length > 0 && (
         <div className="w-full h-96">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
@@ -91,7 +113,7 @@ const CryptoChart = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

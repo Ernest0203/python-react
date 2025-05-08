@@ -1,4 +1,3 @@
-# routes/crypto_predict.py
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse
 from pybit.unified_trading import HTTP
@@ -6,8 +5,9 @@ from datetime import datetime, timedelta
 import time
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor
-from xgboost import XGBRegressor
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
+from xgboost import XGBRegressor, XGBClassifier
+from sklearn.preprocessing import LabelEncoder
 from ta.momentum import RSIIndicator
 from ta.trend import MACD, EMAIndicator
 
@@ -56,30 +56,68 @@ def predict_crypto_price(
         features = ["close", "rsi", "macd", "ema"]
         forecast_horizon = 5
 
-        X, y = [], []
+        # ---------- Регрессия: прогноз цен ----------
+        X_reg, y_reg = [], []
         for i in range(len(df) - forecast_horizon):
-            X.append(df[features].iloc[i].values)
-            y.append(df["close"].iloc[i + 1:i + 1 + forecast_horizon].values)
+            X_reg.append(df[features].iloc[i].values)
+            y_reg.append(df["close"].iloc[i + 1:i + 1 + forecast_horizon].values)
 
-        X = np.array(X)
-        y = np.array(y)
+        X_reg = np.array(X_reg)
+        y_reg = np.array(y_reg)
 
-        # Random Forest
+        # Random Forest Regressor
         rf = RandomForestRegressor(n_estimators=100, random_state=42)
-        rf.fit(X, y)
+        rf.fit(X_reg, y_reg)
         rf_pred = rf.predict([df[features].iloc[-1].values])[0].tolist()
 
-        # XGBoost
+        # XGBoost Regressor
         xgb = XGBRegressor(n_estimators=100, random_state=42)
-        xgb.fit(X, y)
+        xgb.fit(X_reg, y_reg)
         xgb_pred = xgb.predict([df[features].iloc[-1].values])[0].tolist()
+
+        # ---------- Классификация: "up", "down", "stable" ----------
+        df["pct_change"] = df["close"].pct_change().shift(-1)
+
+        def classify(change, threshold=0.01):
+            if change > threshold:
+                return "up"
+            elif change < -threshold:
+                return "down"
+            else:
+                return "stable"
+
+        df["label"] = df["pct_change"].apply(classify)
+        df.dropna(inplace=True)
+
+        X_cls = df[features][:-1]
+        y_cls = df["label"][:-1]
+
+        # Label Encoding
+        encoder = LabelEncoder()
+        y_cls_encoded = encoder.fit_transform(y_cls)
+
+        # Random Forest Classifier
+        rf_clf = RandomForestClassifier(n_estimators=100, random_state=42)
+        rf_clf.fit(X_cls, y_cls_encoded)
+        rf_class_encoded = rf_clf.predict([df[features].iloc[-1].values])[0]
+        rf_class = encoder.inverse_transform([rf_class_encoded])[0]
+
+        # XGBoost Classifier
+        xgb_clf = XGBClassifier(n_estimators=100, use_label_encoder=False, eval_metric="mlogloss", random_state=42)
+        xgb_clf.fit(X_cls, y_cls_encoded)
+        xgb_class_encoded = xgb_clf.predict([df[features].iloc[-1].values])[0]
+        xgb_class = encoder.inverse_transform([xgb_class_encoded])[0]
 
         result = {
             "symbol": symbol,
             "interval": interval,
             "last_close": float(df["close"].iloc[-1]),
             "random_forest": [float(p) for p in rf_pred],
-            "xgboost": [float(p) for p in xgb_pred]
+            "xgboost": [float(p) for p in xgb_pred],
+            "classification": {
+                "random_forest": rf_class,
+                "xgboost": xgb_class
+            }
         }
 
         return JSONResponse(content=result)
