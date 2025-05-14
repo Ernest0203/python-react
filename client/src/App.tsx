@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, memo } from 'react'
 import { useNavigate, Routes, Route, Navigate 
   } from 'react-router-dom'
 import Analyze from './views/analyze/analyze'
@@ -8,9 +8,24 @@ import Signin from './views/signin'
 import BlurFaces from './views/analyze/blurFaces'
 import AnalyzeTextImg from './views/analyze/ocr'
 import CryptoChart from './views/analyze/crypto'
+import ReactTricks from './views/reactTricks'
 import { Link } from 'react-router-dom'
 
 import './App.css'
+
+const NavBar = memo(() => {
+  return (
+    <div style={{ display: 'flex', gap: 15 }}>
+      <Link to="/analyze">Analyze</Link>
+      <Link to="/predict">Predict</Link>
+      <Link to="/analyze_img">Analyze image</Link>
+      <Link to="/blur_faces">Blur faces</Link>
+      <Link to="/analyze_text">Analyze text</Link>
+      <Link to="/crypto">Crypto predict</Link>
+      <Link to="/react_tricks">React tricks</Link>
+    </div>
+  )
+})
 
 function App() {
   const navigate = useNavigate()
@@ -29,16 +44,7 @@ function App() {
 
   return (
     <>
-      <div className=""
-        style={{ display: 'flex', gap: 15 }}
-      >
-        <Link to="/analyze">Analyze</Link>
-        <Link to="/predict">Predict</Link>
-        <Link to="/analyze_img">Analyze image</Link>
-        <Link to="/blur_faces">Blur faces</Link>
-        <Link to="/analyze_text">Analyze text</Link>
-        <Link to="/crypto">Crypto predict</Link>
-      </div>
+      <NavBar />
 
       <Routes>
         <Route path="/" element={<Navigate to="/analyze" replace/>} />
@@ -49,6 +55,7 @@ function App() {
         <Route path="/blur_faces" element={<BlurFaces />} />
         <Route path="/analyze_text" element={<AnalyzeTextImg />} />
         <Route path="/crypto" element={<CryptoChart />} />
+        <Route path="/react_tricks" element={<ReactTricks />} />
       </Routes>
     </>
   )
