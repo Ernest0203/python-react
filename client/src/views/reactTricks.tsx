@@ -27,7 +27,7 @@ const ReactTricks = memo(() => {
         const res = await axios.get("https://restcountries.com/v3.1/all")
         const newData = res.data.
           map((item: { name: { official: string } }) => item.name.official)
-        const expanded = Array(50).fill(0).flatMap(() => newData)
+        const expanded = Array(10).fill(0).flatMap(() => newData)
         setData(expanded)
         // setFilteredData(expanded)
       } catch (error) {
@@ -48,12 +48,16 @@ const ReactTricks = memo(() => {
   }, [search])
 
   const deferredSearch = useDeferredValue(search)
-
   const filteredData = useMemo(() =>
     data.filter(item =>
       item.toLowerCase().includes(deferredSearch.toLowerCase())
     ), [data, deferredSearch])
 
+  /* Single rerender */
+  // const filteredData = useMemo(() =>
+  //   data.filter(item =>
+  //     item.toLowerCase().includes(search.toLowerCase())
+  //   ), [data, search])
 
   /* useTransition */
   // const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
