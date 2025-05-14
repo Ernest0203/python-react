@@ -18,8 +18,8 @@ const List = memo(({ data }: { data: string[] }) => {
 const ReactTricks = memo(() => {
   let [data, setData] = useState<string[]>([])
   const [search, setSearch] = useState<string>("")
-  const [filteredData, setFilteredData] = useState<string[]>([])
-  const [isPending, startTransition] = useTransition()
+  // const [filteredData, setFilteredData] = useState<string[]>([])
+  // const [isPending, startTransition] = useTransition()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +29,7 @@ const ReactTricks = memo(() => {
           map((item: { name: { official: string } }) => item.name.official)
         const expanded = Array(50).fill(0).flatMap(() => newData)
         setData(expanded)
-        setFilteredData(expanded)
+        // setFilteredData(expanded)
       } catch (error) {
         console.error("Failed to fetch data:", error)
       }
@@ -40,33 +40,33 @@ const ReactTricks = memo(() => {
 
 
   /* useDeferredValue */
-  // const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const newSearch = e.target.value
-  //   if (newSearch !== search) {
-  //     setSearch(newSearch)
-  //   }
-  // }, [search])
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearch = e.target.value
+    if (newSearch !== search) {
+      setSearch(newSearch)
+    }
+  }, [search])
 
-  // const deferredSearch = useDeferredValue(search)
+  const deferredSearch = useDeferredValue(search)
 
-  // const filteredData = useMemo(() =>
-  //   data.filter(item =>
-  //     item.toLowerCase().includes(deferredSearch.toLowerCase())
-  //   ), [data, deferredSearch])
+  const filteredData = useMemo(() =>
+    data.filter(item =>
+      item.toLowerCase().includes(deferredSearch.toLowerCase())
+    ), [data, deferredSearch])
 
 
   /* useTransition */
-  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const newSearch = e.target.value
-    setSearch(newSearch)
+  // const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const newSearch = e.target.value
+  //   setSearch(newSearch)
 
-    startTransition(() => {
-      const filtered = data.filter(item =>
-        item.toLowerCase().includes(newSearch.toLowerCase())
-      )
-      setFilteredData(filtered)
-    })
-  }, [data])
+  //   startTransition(() => {
+  //     const filtered = data.filter(item =>
+  //       item.toLowerCase().includes(newSearch.toLowerCase())
+  //     )
+  //     setFilteredData(filtered)
+  //   })
+  // }, [data])
 
   console.count('Component render')
 
@@ -74,7 +74,7 @@ const ReactTricks = memo(() => {
     <div>
       <h1>React Tricks</h1>
       <input type="text" value={search} onChange={handleSearch} />
-      {isPending && <div style={{ color: "gray" }}>⏳ Pending...</div>}
+      {/* {isPending && <div style={{ color: "gray" }}>⏳ Pending...</div>} */}
       {filteredData.length > 0 &&
         <List data={filteredData}/>
       }
